@@ -1570,15 +1570,19 @@ def delete_end_user(user_id):
 
 
 # ------------------- DB INIT & RUN -------------------
-@app.before_first_request
-def create_tables():
+# ------------------- DB INIT & RUN -------------------
+def initialize_database():
     """Initialize database tables and demo data"""
-    try:
-        db.create_all()
-        init_demo_data()
-        app.logger.info("✅ Database tables created successfully!")
-    except Exception as e:
-        app.logger.error(f"❌ Database initialization error: {str(e)}")
+    with app.app_context():
+        try:
+            db.create_all()
+            init_demo_data()
+            app.logger.info("✅ Database tables created successfully!")
+        except Exception as e:
+            app.logger.error(f"❌ Database initialization error: {str(e)}")
+
+# Initialize database when app starts
+initialize_database()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
